@@ -24,6 +24,13 @@ export class ConfigService {
       },
       transport: Transport.TCP,
     };
+    this.envConfig.authService = {
+      options: {
+        port: process.env.AUTH_SERVICE_PORT,
+        host: process.env.AUTH_SERVICE_HOST,
+      },
+      transport: Transport.TCP,
+    };
 
     this.envConfig.MONGO_URL = process.env.MONGO_URL;
   }

@@ -20,6 +20,14 @@ import { ClientProxyFactory } from '@nestjs/microservices';
       },
       inject: [ConfigService],
     },
+    {
+      provide: 'AUTH_CLIENT',
+      useFactory: (configService: ConfigService) => {
+        const authServiceOptions = configService.get('authService');
+        return ClientProxyFactory.create(authServiceOptions);
+      },
+      inject: [ConfigService],
+    },
   ],
 })
 export class AppModule {}

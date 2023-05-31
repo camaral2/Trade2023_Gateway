@@ -2,15 +2,25 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 //import * as mongoose from 'mongoose';
 import { AppModule } from './../src/app.module';
+import { HttpStatus, ValidationPipe } from '@nestjs/common';
 //import { userSignupRequestSuccess } from './mocks/user-signup-request-success.mock';
 //import { taskCreateRequestSuccess } from './mocks/task-create-request-success.mock';
 //import { taskUpdateRequestSuccess } from './mocks/task-update-request-success.mock';
 
 describe('Tasks (e2e)', () => {
   let app;
-  let user;
-  let taskId: string;
-  let userToken: string;
+  let api;
+  //let user;
+  //let taskId: string;
+  //let userToken: string;
+
+  const urlAuth = process.env.ADM_URL;
+  let jwtToken = '';
+  const jwtTokenFake =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  const userId = '929d00f9-1ea7-4a9a-b716-4a204e161e2e';
+  const username = process.env.ADM_USER;
+  const password = process.env.ADM_PASSWD;
 
   beforeAll(async () => {
     //await mongoose.connect(process.env.MONGO_DSN, { useNewUrlParser: true });
@@ -23,7 +33,74 @@ describe('Tasks (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
+    //app.useGlobalFilters(new HttpExceptionFilter());
+
     await app.init();
+    api = await app.getHttpServer();
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+
+  describe.only('Login', () => {
+    it('should log a user in and return a JWT token', async () => {
+      await request(urlAuth)
+        .post('auth/login')
+        .send({ username, password })
+        .expect(HttpStatus.CREATED)
+        .expect((res) => {
+          expect(res.body.username).toEqual(username);
+          expect(res.body.password).toBeUndefined();
+          expect(res.body.token.access_token).toBeDefined();
+
+          jwtToken = res.body.token.access_token;
+
+          expect(jwtToken).toMatch(
+            /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/,
+          ); // jwt regex
+        });
+    });
+  });
+
+  describe('Should list all compra of user', () => {
+    it.only('Should list all compra send token empty', async () => {
+      const rest = await request(api)
+        .get(`/compra`)
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .expect(HttpStatus.OK);
+      console.log(rest.body);
+    });
+
+    it('Should list all compra send token empty', async () => {
+      const resp = await request(api)
+        .get(`/compra/${userId}`)
+        .expect(HttpStatus.FORBIDDEN);
+
+      expect(resp.body[0]._id).not.toBeDefined();
+      expect(resp.body[0]._id).toBeNull();
+    });
+
+    it('Should list all compra send token invalid', async () => {
+      const resp = await request(api)
+        .get(`/compra/${userId}`)
+        .set('Authorization', `Bearer ${jwtTokenFake}`)
+        .expect(HttpStatus.FORBIDDEN);
+
+      expect(resp.body[0]._id).not.toBeDefined();
+      expect(resp.body[0]._id).toBeNull();
+    });
+
+    it('Should list all compra send token valid', async () => {
+      const resp = await request(api)
+        .get(`/compra/${userId}`)
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .expect(HttpStatus.OK);
+
+      expect(resp.body[0]._id).toBeDefined();
+      expect(resp.body[0]._id).not.toBeNull();
+    });
   });
 
   // it('/users/ (POST) - should create a user for checking tasks api', (done) => {
