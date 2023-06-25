@@ -50,6 +50,9 @@ describe('ConfigService', () => {
 
     expect(cadService.options.host).toBeDefined();
     expect(typeof cadService.options.host).toBe('string');
+
+    expect(port).toEqual(5002);
+    expect(cadService.options.host).toEqual('localhost');
   });
 
   it('should get valid options for authService', () => {

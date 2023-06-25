@@ -23,7 +23,6 @@ export class AuthGuard implements CanActivate {
       //   .send({ role: 'auth', cmd: 'check' }, { jwt: token })
       //   .pipe(timeout(5000))
       //   .toPromise();
-
       const retAuth = await this.authServiceClient.send(
         { role: 'auth', cmd: 'check' },
         {

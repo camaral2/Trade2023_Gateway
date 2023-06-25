@@ -18,7 +18,7 @@ describe('Tasks (e2e)', () => {
   let jwtToken = '';
   const jwtTokenFake =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-  const userId = '929d00f9-1ea7-4a9a-b716-4a204e161e2e';
+  const userId = '63b34f5da25fbb24d295ab24';
   const username = process.env.ADM_USER;
   const password = process.env.ADM_PASSWD;
 
@@ -40,11 +40,11 @@ describe('Tasks (e2e)', () => {
     api = await app.getHttpServer();
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
   });
 
-  describe.only('Login', () => {
+  describe('Login', () => {
     it('should log a user in and return a JWT token', async () => {
       await request(urlAuth)
         .post('auth/login')
@@ -65,21 +65,12 @@ describe('Tasks (e2e)', () => {
   });
 
   describe('Should list all compra of user', () => {
-    it.only('Should list all compra send token empty', async () => {
-      const rest = await request(api)
-        .get(`/compra`)
-        .set('Authorization', `Bearer ${jwtToken}`)
-        .expect(HttpStatus.OK);
-      console.log(rest.body);
-    });
-
     it('Should list all compra send token empty', async () => {
       const resp = await request(api)
         .get(`/compra/${userId}`)
         .expect(HttpStatus.FORBIDDEN);
 
-      expect(resp.body[0]._id).not.toBeDefined();
-      expect(resp.body[0]._id).toBeNull();
+      expect(resp.body.error).toBeDefined();
     });
 
     it('Should list all compra send token invalid', async () => {
@@ -88,8 +79,7 @@ describe('Tasks (e2e)', () => {
         .set('Authorization', `Bearer ${jwtTokenFake}`)
         .expect(HttpStatus.FORBIDDEN);
 
-      expect(resp.body[0]._id).not.toBeDefined();
-      expect(resp.body[0]._id).toBeNull();
+      expect(resp.body.error).toBeDefined();
     });
 
     it('Should list all compra send token valid', async () => {
@@ -98,8 +88,10 @@ describe('Tasks (e2e)', () => {
         .set('Authorization', `Bearer ${jwtToken}`)
         .expect(HttpStatus.OK);
 
-      expect(resp.body[0]._id).toBeDefined();
-      expect(resp.body[0]._id).not.toBeNull();
+      expect(resp.body.compras).toBeDefined();
+
+      expect(resp.body.compras[0]._id).toBeDefined();
+      expect(resp.body.compras[0]._id).not.toBeNull();
     });
   });
 
