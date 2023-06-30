@@ -19,14 +19,12 @@ import {
   ApiTags,
   ApiOkResponse,
   ApiBearerAuth,
-  ApiQuery,
   ApiParam,
 } from '@nestjs/swagger';
-import { firstValueFrom, take } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { GetComprasResponseDto } from './dto/get-compra-response.dto';
 import { ICompra } from './interfaces/compra.interface';
 import { AuthGuard } from './../services/guards/auth-guard';
-import logger from '../utils/logger';
 
 //import { Authorization } from './decorators/authorization.decorator';
 //import { Permission } from './decorators/permission.decorator';
