@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { AuthGuard } from './services/guards/auth-guard';
 
 @Controller()
 export class AppController {
@@ -16,14 +15,6 @@ export class AppController {
 
   @Get()
   getVersion(): string {
-    return this.appService.getVersion();
-  }
-
-  @Post()
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @UsePipes(new ValidationPipe())
-  postTest(): string {
     return this.appService.getVersion();
   }
 }

@@ -8,17 +8,6 @@ import { CompraModule } from './compra/compra.module';
 @Module({
   imports: [CompraModule],
   controllers: [AppController],
-  providers: [
-    AppService,
-    ConfigService,
-    {
-      provide: 'AUTH_CLIENT',
-      useFactory: (configService: ConfigService) => {
-        const authServiceOptions = configService.get('authService');
-        return ClientProxyFactory.create(authServiceOptions);
-      },
-      inject: [ConfigService],
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

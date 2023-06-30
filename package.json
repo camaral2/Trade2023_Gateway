@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "update-deps": "npm update",
     "restart-pm2": "pm2 restart \"trade2023_gateway\"",
-    "update-and-restart": "npm run update-deps && npm run restart-pm2"
+    "update-and-restart": "npm run restart-pm2"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

@@ -5,6 +5,19 @@ on:
     branches:
       - test
 
+env:
+  MONGO_URL: ValueFakeToTest
+  API_GATEWAY_PORT: 6000
+  CAD_SERVICE_PORT: 5002
+  CAD_SERVICE_HOST: localhost
+  ACAO_SERVICE_PORT: 5001
+  ACAO_SERVICE_HOST: localhost
+  AUTH_SERVICE_PORT: 4010
+  AUTH_SERVICE_HOST: localhost
+  ADM_URL: localhost:4000/api/v1/
+  ADM_USER: userFake
+  ADM_PASSWD=: passFake
+
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -71,8 +71,10 @@ describe('ConfigService', () => {
     expect(authService.options.host).toBeDefined();
     expect(typeof authService.options.host).toBe('string');
 
-    expect(authService.options.port).toEqual(31074);
-    expect(authService.options.host).toEqual('200.98.128.106');
+    const portAuthService = parseInt(authService.options.port);
+
+    expect(portAuthService).toBeGreaterThan(0);
+    expect(portAuthService).toBeLessThan(65536);
   });
 
   it('should get a valid MONGO_URL', () => {

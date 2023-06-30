@@ -1,32 +1,52 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompraController } from './compra.controller';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { GetComprasResponseDto } from './dto/get-compra-response.dto';
 import { compraRequestSuccess } from '../mocks/compra-request-success.mock';
 describe('CompraController', () => {
   let controller: CompraController;
 
-  const listAcaoMock = [compraRequestSuccess];
+  const userAuth = {
+    username: 'test',
+    password: '112233',
+    name: 'Cristian',
+    isActive: true,
+  };
 
-  const dataAcaoMockObservable = new Observable((observer) => {
-    observer.next(listAcaoMock);
+  const dataUserMockObservable = new Observable((observer) => {
+    observer.next(userAuth);
   });
 
-  dataAcaoMockObservable.subscribe();
+  dataUserMockObservable.subscribe();
 
-  const mockHttpService = {
-    send: jest.fn().mockResolvedValue(dataAcaoMockObservable),
+  const mockHttpServiceAuth = {
+    send: jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(of(dataUserMockObservable))),
+    close: jest.fn(),
+  };
+
+  const authMicroServiceProvider = {
+    provide: 'AUTH_CLIENT',
+    useValue: mockHttpServiceAuth,
+  };
+
+  const listAcaoMock = [compraRequestSuccess];
+
+  const mockHttpServiceCad = {
+    send: jest.fn().mockResolvedValue(of(listAcaoMock)),
+    close: jest.fn(),
   };
 
   const cadMicroServiceProvider = {
     provide: 'CAD_MICROSERVICE',
-    useValue: mockHttpService,
+    useValue: mockHttpServiceCad,
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CompraController],
-      providers: [cadMicroServiceProvider],
+      providers: [cadMicroServiceProvider, authMicroServiceProvider],
     }).compile();
 
     controller = module.get<CompraController>(CompraController);
@@ -43,6 +63,6 @@ describe('CompraController', () => {
     expect(ret).toEqual({
       compras: listAcaoMock,
     });
-    expect(mockHttpService.send).toHaveBeenCalled();
+    expect(mockHttpServiceCad.send).toHaveBeenCalled();
   });
 });

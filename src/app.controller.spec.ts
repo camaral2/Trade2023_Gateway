@@ -17,7 +17,7 @@ describe('AppController', () => {
   describe('root', () => {
     it('should return "Hello World!"', () => {
       expect(appController.getVersion()).toMatchObject({
-        app: 'trade2023_service-ac',
+        app: process.env.npm_package_name,
         author: 'Cristian dos Santos Amaral',
         email: 'cristian_amaral@hotmail.com',
         version: process.env.npm_package_version,
