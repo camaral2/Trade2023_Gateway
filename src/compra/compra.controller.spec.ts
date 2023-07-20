@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CompraController } from './compra.controller';
 import { Observable, of } from 'rxjs';
 import { GetComprasResponseDto } from './dto/get-compra-response.dto';
-import { compraRequestSuccess } from '../mocks/compra-request-success.mock';
+import { compraRequestSuccess } from './mocks/compra-request-success.mock';
 describe('CompraController', () => {
   let controller: CompraController;
 

@@ -4,10 +4,11 @@ import { AppService } from './app.service';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { ConfigService } from './services/config/config.service';
 import { CompraModule } from './compra/compra.module';
+import { AcaoModule } from './acao/acao.module';
 import logger from './utils/logger';
 
 @Module({
-  imports: [CompraModule],
+  imports: [CompraModule, AcaoModule],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
@@ -23,11 +24,11 @@ export class AppModule implements OnModuleInit {
     logger.log('SERVICE ACAO HOST:' + acaoService.options.host);
 
     const cadService = this.configService.get('cadService');
-    logger.log('SERVICE ACAO PORT:' + cadService.options.port);
-    logger.log('SERVICE ACAO HOST:' + cadService.options.host);
+    logger.log('SERVICE CAD PORT:' + cadService.options.port);
+    logger.log('SERVICE CAD HOST:' + cadService.options.host);
 
     const authService = this.configService.get('authService');
-    logger.log('SERVICE ACAO PORT:' + authService.options.port);
-    logger.log('SERVICE ACAO HOST:' + authService.options.host);
+    logger.log('SERVICE Auth PORT:' + authService.options.port);
+    logger.log('SERVICE Auth HOST:' + authService.options.host);
   }
 }
