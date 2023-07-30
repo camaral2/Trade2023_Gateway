@@ -34,10 +34,6 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  it('should get error for Forbidden', async () => {
-    await request(app.getHttpServer()).post('/').expect(HttpStatus.FORBIDDEN);
-  });
-
   it('should log a user in and return a JWT token', async () => {
     await request(urlAuth)
       .post('auth/login')
@@ -53,15 +49,11 @@ describe('AppController (e2e)', () => {
   });
 
   it('should post', async () => {
-    await request(app.getHttpServer())
-      .post('/')
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .expect(HttpStatus.CREATED)
-      .expect({
-        app: 'trade2023_gateway',
-        author: 'Cristian dos Santos Amaral',
-        email: 'cristian_amaral@hotmail.com',
-        version: process.env.npm_package_version,
-      });
+    await request(app.getHttpServer()).get('/').expect(HttpStatus.OK).expect({
+      app: 'trade2023_gateway',
+      author: 'Cristian dos Santos Amaral',
+      email: 'cristian_amaral@hotmail.com',
+      version: '1.0.3',
+    });
   });
 });

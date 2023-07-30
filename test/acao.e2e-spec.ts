@@ -69,7 +69,7 @@ describe('Acao (e2e)', () => {
 
     it('Should list all compra send token valid', async () => {
       const resp = await request(api)
-        .get(`/acao`)
+        .get(`/acao/`)
         .set('Authorization', `Bearer ${jwtToken}`)
         .expect(HttpStatus.OK);
 

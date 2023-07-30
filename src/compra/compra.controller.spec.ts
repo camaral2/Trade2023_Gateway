@@ -58,8 +58,9 @@ describe('CompraController', () => {
 
   it('should get compra of User', async () => {
     const userId = '69c04ba0-f28f-11ed-a05b-0242ac120003';
+    const acao = 'MGLU3';
 
-    const ret: GetComprasResponseDto = await controller.getCompra(userId);
+    const ret: GetComprasResponseDto = await controller.getCompra(userId, acao);
     expect(ret).toEqual({
       compras: listAcaoMock,
     });

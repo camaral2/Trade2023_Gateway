@@ -40,26 +40,33 @@ export class CompraController {
     @Inject('CAD_MICROSERVICE') private readonly cadServiceClient: ClientProxy,
   ) {}
 
-  @Get(':userId')
+  @Get(':userId/:acao')
   @ApiParam({
     name: 'userId',
     type: String,
     description: 'ID of the User',
   })
-  //@Authorization(true)
-  //@Permission('compra_findAll')
+  @ApiParam({
+    name: 'acao',
+    type: String,
+    description: 'Sigla of acao',
+  })
   @ApiOkResponse({
     type: GetComprasResponseDto,
     description: 'List of compras of user',
   })
   public async getCompra(
     @Param('userId') userId: string,
+    @Param('acao') acao: string,
   ): Promise<GetComprasResponseDto> {
     try {
       if (!userId) {
         throw new BadRequestException('User ID is required (userId)');
       }
-      const result = await this.cadServiceClient.send('compra_findAll', userId);
+      const result = await this.cadServiceClient.send('compra_findAll', {
+        userId,
+        acao,
+      });
       //  .toPromise();
       const ret: ICompra[] = await firstValueFrom(result);
 
