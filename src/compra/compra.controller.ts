@@ -64,8 +64,8 @@ export class CompraController {
         throw new BadRequestException('User ID is required (userId)');
       }
       const result = await this.cadServiceClient.send('compra_findAll', {
-        userId,
-        acao,
+        user: userId,
+        acao: acao,
       });
       //  .toPromise();
       const ret: ICompra[] = await firstValueFrom(result);

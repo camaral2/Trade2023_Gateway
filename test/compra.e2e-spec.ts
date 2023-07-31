@@ -18,6 +18,7 @@ describe('Tasks (e2e)', () => {
   const userId = '63b34f5da25fbb24d295ab24';
   const username = process.env.ADM_USER;
   const password = process.env.ADM_PASSWD;
+  const acao = 'MGLU3';
 
   beforeAll(async () => {
     //await mongoose.connect(process.env.MONGO_DSN, { useNewUrlParser: true });
@@ -64,7 +65,7 @@ describe('Tasks (e2e)', () => {
   describe('Should list all compra of user', () => {
     it('Should list all compra send token empty', async () => {
       const resp = await request(api)
-        .get(`/compra/${userId}`)
+        .get(`/compra/${userId}/${acao}`)
         .expect(HttpStatus.FORBIDDEN);
 
       expect(resp.body.error).toBeDefined();
@@ -72,7 +73,7 @@ describe('Tasks (e2e)', () => {
 
     it('Should list all compra send token invalid', async () => {
       const resp = await request(api)
-        .get(`/compra/${userId}`)
+        .get(`/compra/${userId}/${acao}`)
         .set('Authorization', `Bearer ${jwtTokenFake}`)
         .expect(HttpStatus.FORBIDDEN);
 
@@ -81,7 +82,7 @@ describe('Tasks (e2e)', () => {
 
     it('Should list all compra send token valid', async () => {
       const resp = await request(api)
-        .get(`/compra/${userId}`)
+        .get(`/compra/${userId}/${acao}`)
         .set('Authorization', `Bearer ${jwtToken}`)
         .expect(HttpStatus.OK);
 
