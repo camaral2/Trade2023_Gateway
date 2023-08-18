@@ -3,6 +3,13 @@ import { CompraController } from './compra.controller';
 import { Observable, of } from 'rxjs';
 import { GetComprasResponseDto } from './dto/get-compra-response.dto';
 import { compraRequestSuccess } from './mocks/compra-request-success.mock';
+import { CreateCompraDto } from './dto/create-compra.dto';
+import { CompraResponseDto } from './dto/compra-response.dto';
+import { UpdateCompraDto } from './dto/update-compra.dto';
+import { SetSaleCompraDto } from './dto/set-sale-compra.dto';
+import { CompraIdDto } from './dto/compra-Id.dto';
+import { ReturnDeleteUpdateDto } from 'src/utils/return-delete-update.dto';
+import { CompraRequestDto } from './dto/compra-request.dto';
 describe('CompraController', () => {
   let controller: CompraController;
 
@@ -65,5 +72,92 @@ describe('CompraController', () => {
       compras: listAcaoMock,
     });
     expect(mockHttpServiceCad.send).toHaveBeenCalled();
+  });
+
+  it('should create compra of User', async () => {
+    const compraRequest: CreateCompraDto = compraRequestSuccess;
+
+    const compraResponse: CompraResponseDto = {
+      compra: compraRequestSuccess,
+    };
+
+    mockHttpServiceCad.send.mockResolvedValue(of(compraResponse));
+    const ret: CompraResponseDto = await controller.createCompra(compraRequest);
+
+    expect(ret.compra).toEqual(compraRequest);
+    expect(mockHttpServiceCad.send).toHaveBeenCalled();
+    expect(mockHttpServiceCad.send).toHaveBeenCalledWith(
+      'compra_create',
+      compraRequest,
+    );
+  });
+
+  it('should update compra of User', async () => {
+    const compraRequest: CompraRequestDto = {
+      id: compraRequestSuccess._id,
+      compra: compraRequestSuccess,
+    };
+
+    const compraResponse: ReturnDeleteUpdateDto = {
+      affected: 1,
+    };
+
+    mockHttpServiceCad.send.mockResolvedValue(of(compraResponse));
+    const ret: ReturnDeleteUpdateDto = await controller.updateCompra(
+      compraRequest,
+    );
+
+    expect(ret.affected).toEqual(1);
+    expect(mockHttpServiceCad.send).toHaveBeenCalled();
+    expect(mockHttpServiceCad.send).toHaveBeenCalledWith(
+      'compra_update',
+      compraRequest,
+    );
+  });
+
+  it('should update compra for Sale of User', async () => {
+    const compraRequest: CompraRequestDto = {
+      id: compraRequestSuccess._id,
+      compra: compraRequestSuccess,
+    };
+
+    const compraResponse: ReturnDeleteUpdateDto = {
+      affected: 1,
+    };
+
+    mockHttpServiceCad.send.mockResolvedValue(of(compraResponse));
+    const ret: ReturnDeleteUpdateDto = await controller.setVendaCompra(
+      compraRequest,
+    );
+
+    expect(ret.affected).toEqual(1);
+    expect(mockHttpServiceCad.send).toHaveBeenCalled();
+    expect(mockHttpServiceCad.send).toHaveBeenCalledWith(
+      'compra_venda',
+      compraRequest,
+    );
+  });
+
+  it('should delete compra of User', async () => {
+    const compraRequest: CompraRequestDto = {
+      id: compraRequestSuccess._id,
+      compra: null,
+    };
+
+    const compraResponse: ReturnDeleteUpdateDto = {
+      affected: 1,
+    };
+
+    mockHttpServiceCad.send.mockResolvedValue(of(compraResponse));
+    const ret: ReturnDeleteUpdateDto = await controller.deleteCompra(
+      compraRequest,
+    );
+
+    expect(ret.affected).toEqual(1);
+    expect(mockHttpServiceCad.send).toHaveBeenCalled();
+    expect(mockHttpServiceCad.send).toHaveBeenCalledWith(
+      'compra_remove',
+      compraRequest,
+    );
   });
 });

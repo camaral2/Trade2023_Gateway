@@ -53,7 +53,7 @@ describe('AppController (e2e)', () => {
       app: 'trade2023_gateway',
       author: 'Cristian dos Santos Amaral',
       email: 'cristian_amaral@hotmail.com',
-      version: '1.0.3',
+      version: '1.0.4',
     });
   });
 });
